@@ -33,7 +33,7 @@ inputs:
       prefix: -k
       itemSeparator: ","
       separate: true
-  intercept:
+  slope_intercept:
     type: boolean
     default: false
     inputBinding:

@@ -13,8 +13,8 @@ inputs:
   filter_threshold: float
 outputs:
   predictions:
-    type: File[]
-    outputSource: predict/predictions
+    type: File
+    outputSource: combine/output
 steps:
   predict:
     run: predict-tf-binding.cwl
@@ -30,3 +30,8 @@ steps:
       transform: transform
       filter_threshold: filter_threshold
     out: [predictions]
+  combine:
+    run: combine.cwl
+    in:
+      input_files: predict/predictions
+    out: [output]

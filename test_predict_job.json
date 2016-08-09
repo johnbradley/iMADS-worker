@@ -1,0 +1,25 @@
+{
+  "cores": ["CCGC","GCGC","GCGG"],
+  "slope_intercept": true,
+  "kmers": [
+    3
+  ],
+  "models": [{
+    "class": "File",
+    "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1-bestSVR.model"
+  },{
+    "class": "File",
+    "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1-bestSVR.model"
+  },{
+    "class": "File",
+    "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1-bestSVR.model"
+  }
+  ],
+  "sequence": {
+    "class": "File",
+    "path": "/Users/dcl9/Code/python/predictor/100_random_500bp_seqs.fa"
+  },
+  "width": 36,
+  "filter_threshold": 0.207,
+  "transform": false
+}

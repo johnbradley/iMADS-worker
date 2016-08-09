@@ -7,5 +7,5 @@ inputs:
     inputBinding:
       position: 1
 outputs:
-  output:
+  combined:
     type: stdout

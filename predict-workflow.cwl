@@ -14,7 +14,7 @@ inputs:
 outputs:
   predictions:
     type: File
-    outputSource: combine/output
+    outputSource: filter/filtered
 steps:
   predict:
     run: predict-tf-binding.cwl
@@ -28,10 +28,17 @@ steps:
       kmers: kmers
       slope_intercept: slope_intercept
       transform: transform
-      filter_threshold: filter_threshold
     out: [predictions]
   combine:
     run: combine.cwl
     in:
       input_files: predict/predictions
-    out: [output]
+    out: [combined]
+  filter:
+    run: filter.cwl
+    in:
+      input_file: combine/combined
+      filter_threshold: filter_threshold
+    out: [filtered]
+
+

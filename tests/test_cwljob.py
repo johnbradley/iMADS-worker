@@ -5,7 +5,7 @@ import tempfile
 
 class CwlJobGeneratorTestCase(TestCase):
 
-  def tests_model_dict(self):
+  def test_model_dict(self):
     g = CwlJobGenerator(test_data.CONFIG_2X2, 'seq.fa')
     self.assertIsNotNone(g.job)
     self.assertNotIn('models', test_data.CONFIG_2X2, 'test dataset should have model_filenames')
@@ -25,3 +25,11 @@ class CwlJobGeneratorTestCase(TestCase):
     self.assertEqual(len(test_data.CONFIG_1X3['cores']), 3)
     self.assertEqual(len(g.job['models']), 3)
     self.assertEqual(len(g.job['cores']), 3)
+
+  def test_fails_without_params(self):
+    with self.assertRaises(ValueError):
+      g = CwlJobGenerator({}, None)
+    with self.assertRaises(ValueError):
+      g = CwlJobGenerator(None, 'seq.fa')
+
+

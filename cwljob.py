@@ -5,6 +5,10 @@ def make_file_dict(path):
 
 class CwlJobGenerator:
   def __init__(self, config_dict, sequence_file):
+    if sequence_file is None:
+      raise ValueError('Sequence file is required')
+    if config_dict is None:
+      raise ValueError('config_dict is required')
     self.config_dict = config_dict
     self.sequence_file = sequence_file
     self._job = None

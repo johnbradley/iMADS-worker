@@ -1,0 +1,52 @@
+- assembly: hg19
+  author_identifier: AB
+  cores:
+  - CCGC
+  - GCGC
+  - GCGG
+  filter_threshold: 0.207
+  kmers:
+  - 3
+  model_filenames:
+  - model_1234.model
+  protein: ABCD
+  serial_number: '1234'
+  slope_intercept: true
+  track_filename: hg19-1234-ABCD.bb
+  track_name: ABCD_1234(AB)
+  width: 20
+- assembly: hg38
+  author_identifier: CD
+  cores:
+  - TTAA
+  - CCCC
+  filter_threshold: 0.100
+  kmers:
+  - 1
+  - 2
+  model_filenames:
+  - model_9876.model
+  protein: WXYZ
+  serial_number: '9876'
+  slope_intercept: true
+  track_filename: hg38-9876-WXYZ.bb
+  track_name: WXYZ_9876(CD)
+  width: 20
+- assembly: hg38
+  author_identifier: CD
+  cores:
+  - GGGG
+  - AAAA
+  filter_threshold: 0.100
+  kmers:
+  - 1
+  - 2
+  - 3
+  model_filenames:
+  - model_5555.model
+  protein: LLLL
+  serial_number: '5555'
+  slope_intercept: true
+  track_filename: hg38-5555-LLLL.bb
+  track_name: LLLL_5555(CD)
+  width: 32

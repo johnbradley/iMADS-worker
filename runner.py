@@ -1,6 +1,6 @@
 from cwljob import CwlJobGenerator
 from load import ConfigLoader
-import cwltool
+from cwltool.main import main as cwl_main
 import datetime
 import os
 
@@ -11,12 +11,13 @@ class ConfigNotFoundException(Exception):
   pass
 
 class PredictionRunner:
-  def __init__(self, workflow, sequence_file, model_identifier, config_file_path, order_file_directory):
+  def __init__(self, workflow, sequence_file, model_identifier, config_file_path, model_files_directory, output_directory):
     self.workflow = workflow
     self.sequence_file = sequence_file
     self.model_identifier = model_identifier
     self.config_file_path = config_file_path
-    self.order_file_directory = order_file_directory
+    self.model_files_directory = model_files_directory
+    self.output_directory = output_directory
     # Force config and job loading to validate inputs
     self._load()
 
@@ -31,7 +32,7 @@ class PredictionRunner:
     self.config = loader.config
 
   def _load_job_generator(self):
-    self.job_generator = CwlJobGenerator(self.config, self.sequence_file)
+    self.job_generator = CwlJobGenerator(self.config, self.sequence_file, self.model_files_directory)
 
   @property
   def order_file_name(self):
@@ -39,7 +40,7 @@ class PredictionRunner:
 
   @property
   def order_file_path(self):
-    return os.path.join(self.order_file_directory, self.order_file_name)
+    return os.path.join(self.output_directory, self.order_file_name)
 
   def write_json_order(self):
     with open(self.order_file_path, 'w') as f:
@@ -48,7 +49,8 @@ class PredictionRunner:
   def run(self):
     # write the order
     # Run the workflow
-    cwltool.main(workflow=self.workflow, job_order_object=self.job_generator.job)
+    self.write_json_order()
+    cwl_main([self.workflow,self.order_file_path])
 
 
 

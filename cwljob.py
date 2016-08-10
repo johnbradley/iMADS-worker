@@ -1,16 +1,20 @@
 import json
+import os
 
 def make_file_dict(path):
   return {'class': 'File', 'path': path}
 
 class CwlJobGenerator:
-  def __init__(self, config_dict, sequence_file):
+  def __init__(self, config_dict, sequence_file, model_files_directory):
     if sequence_file is None:
       raise ValueError('Sequence file is required')
     if config_dict is None:
       raise ValueError('config_dict is required')
+    if model_files_directory is None:
+      raise ValueError('model_files_directory is required')
     self.config_dict = config_dict
     self.sequence_file = sequence_file
+    self.model_files_directory = model_files_directory
     self._job = None
 
   @property
@@ -22,7 +26,7 @@ class CwlJobGenerator:
       num_models, num_cores = len(model_filenames), len(job['cores'])
       if num_cores > num_models:
         model_filenames = model_filenames * num_cores
-      job['models'] = [make_file_dict(model) for model in model_filenames]
+      job['models'] = [make_file_dict(os.path.join(self.model_files_directory, model)) for model in model_filenames]
       job['sequence'] = make_file_dict(self.sequence_file)
       self._job = job
     return self._job

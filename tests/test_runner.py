@@ -2,8 +2,8 @@ import shutil
 import tempfile
 from unittest import TestCase
 
-from runner import PredictionRunner
-
+from runner import PredictionRunner, RunnerException
+from mock import Mock, patch
 
 class PredictionRunnerTestCase(TestCase):
     sequence = 'tests/test_sequence.fa'
@@ -33,3 +33,25 @@ class PredictionRunnerTestCase(TestCase):
     def test_fails_with_missing_config(self):
         with self.assertRaises(ValueError):
             PredictionRunner(self.workflow, self.sequence, self.model, None, self.models_dir, self.output_dir)
+
+    @patch('runner.cwl_main')
+    def test_runs_cwltool_gets_output(self, mock_cwl_main):
+        p = PredictionRunner(self.workflow, self.sequence, self.model, self.config, self.models_dir, self.output_dir)
+        def side_effect(args, stdout, stderr):
+          print >>stdout, '{"predictions":{"path": "/preds.bed","class": "File","size": 124}}'
+          return 0
+        mock_cwl_main.side_effect = side_effect
+        result = p.run()
+        self.assertTrue(mock_cwl_main.called)
+        self.assertEqual(result['path'], '/preds.bed')
+
+    @patch('runner.cwl_main')
+    def test_handles_cwltool_failures(self, mock_cwl_main):
+        p = PredictionRunner(self.workflow, self.sequence, self.model, self.config, self.models_dir, self.output_dir)
+        def side_effect(args, stdout, stderr):
+          print >>stderr, 'error in cwl_main'
+          return 1
+        mock_cwl_main.side_effect = side_effect
+        with self.assertRaises(RunnerException):
+          p.run()
+          self.assertTrue(mock_cwl_main.called)

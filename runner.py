@@ -1,5 +1,6 @@
 from cwljob import CwlJobGenerator
 from load import ConfigLoader
+import cwltool
 import datetime
 import os
 
@@ -10,7 +11,8 @@ class ConfigNotFoundException(Exception):
   pass
 
 class PredictionRunner:
-  def __init__(self, sequence_file, model_identifier, config_file_path, order_file_directory):
+  def __init__(self, workflow, sequence_file, model_identifier, config_file_path, order_file_directory):
+    self.workflow = workflow
     self.sequence_file = sequence_file
     self.model_identifier = model_identifier
     self.config_file_path = config_file_path
@@ -44,5 +46,9 @@ class PredictionRunner:
       self.job_generator.write_json(f)
 
   def run(self):
-    self.write_json_order()
+    # write the order
+    # Run the workflow
+    cwltool.main(workflow=self.workflow, job_order_object=self.job_generator.job)
+
+
 

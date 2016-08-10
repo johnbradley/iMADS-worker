@@ -4,8 +4,9 @@ def make_file_dict(path):
   return {'class': 'File', 'path': path}
 
 class CwlJobGenerator:
-  def __init__(self, config_dict):
+  def __init__(self, config_dict, sequence_file):
     self.config_dict = config_dict
+    self.sequence_file = sequence_file
     self._job = None
 
   @property
@@ -18,6 +19,7 @@ class CwlJobGenerator:
       if num_cores > num_models:
         model_filenames = model_filenames * num_cores
       job['models'] = [make_file_dict(model) for model in model_filenames]
+      job['sequence'] = make_file_dict(self.sequence_file)
       self._job = job
     return self._job
 

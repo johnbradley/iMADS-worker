@@ -6,20 +6,21 @@ import tempfile
 class CwlJobGeneratorTestCase(TestCase):
 
   def tests_model_dict(self):
-    g = CwlJobGenerator(test_data.CONFIG_2X2)
+    g = CwlJobGenerator(test_data.CONFIG_2X2, 'seq.fa')
     self.assertIsNotNone(g.job)
     self.assertNotIn('models', test_data.CONFIG_2X2, 'test dataset should have model_filenames')
     self.assertIn('models', g.job, 'generated job dict should just have models')
+    self.assertEqual(g.job['sequence'], {'class':'File','path':'seq.fa'}, 'job should have sequence file object')
 
   def test_writes_json(self):
-    g = CwlJobGenerator(test_data.CONFIG_2X2)
+    g = CwlJobGenerator(test_data.CONFIG_2X2, 'seq.fa')
     output_file = tempfile.NamedTemporaryFile()
     self.assertEqual(output_file.tell(), 0)
     g.write_json(output_file)
     self.assertNotEqual(output_file.tell(), 0, 'write_json should have written to the file')
 
   def test_matrixes_models(self):
-    g = CwlJobGenerator(test_data.CONFIG_1X3)
+    g = CwlJobGenerator(test_data.CONFIG_1X3, 'seq.fa')
     self.assertEqual(len(test_data.CONFIG_1X3['model_filenames']), 1)
     self.assertEqual(len(test_data.CONFIG_1X3['cores']), 3)
     self.assertEqual(len(g.job['models']), 3)

@@ -38,11 +38,13 @@ def main(workflow, sequence_file, model_identifier, config_file_path, model_file
 
     Returns
     -------
-    None (nothing yet)
+    None
 
     """
-    PredictionRunner(workflow, sequence_file, model_identifier, config_file_path, model_files_directory,
+    predictions = PredictionRunner(workflow, sequence_file, model_identifier, config_file_path, model_files_directory,
                      output_directory).run()
+    print predictions['path']
+
 
 
 if __name__ == '__main__':

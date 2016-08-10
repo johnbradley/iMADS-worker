@@ -1,6 +1,8 @@
 import datetime
 
+import json
 import os
+import StringIO
 from cwljob import CwlJobGenerator
 from cwltool.main import main as cwl_main
 from load import ConfigLoader
@@ -23,6 +25,8 @@ def timestamp(fmt='%Y-%m-%d_%H-%M-%S'):
 class ConfigNotFoundException(Exception):
     pass
 
+class RunnerException(Exception):
+    pass
 
 class PredictionRunner:
     """
@@ -121,13 +125,30 @@ class PredictionRunner:
         with open(self.order_file_path, 'w') as f:
             self.job_generator.write_json(f)
 
+    def _run_workflow(self):
+        """
+        Runs a workflow using cwltool.main. Sets results into self.result for parsing
+        Raises an exception if CWL workflow didn't run
+        Returns
+        -------
+        CWL output 'object' in a dictionary
+        """
+        out, err = StringIO.StringIO(), StringIO.StringIO()
+        rc = cwl_main([self.workflow, self.order_file_path], stdout=out, stderr=err)
+        if rc == 0:
+            # parse the output data into a dictionary
+            self.result = json.loads(out.getvalue())
+        else:
+            raise RunnerException(err.getvalue())
+
     def run(self):
         """
         Runs predictions, based on the initializer parameters.
         Returns
         -------
-        None (yet)
+        Dictionary object, with path and checksum about predictions file
+
         """
         self.write_json_order()
-        cwl_main([self.workflow, self.order_file_path])
-        # TODO: harness the results
+        self._run_workflow()
+        return self.result['predictions']

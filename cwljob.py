@@ -4,11 +4,33 @@ import os
 
 
 def make_file_dict(path):
+    """
+    Creates a CWL "file object" - a dictionary containing two entries: class and path
+    Parameters
+    ----------
+    path: A file path to encapsulate
+
+    Returns
+    -------
+    A dictionary referencing a file, suitable for a CWL job
+
+    """
     return {'class': 'File', 'path': path}
 
 
 class CwlJobGenerator:
+    """
+    Generates CWL job orders - dictionaries ready for supplying to cwltool in JSON
+    """
     def __init__(self, config_dict, sequence_file, model_files_directory):
+        """
+
+        Parameters
+        ----------
+        config_dict: A dictionary containing model/track config (models, cores, slope_intercept, etc)
+        sequence_file: Path to a fasta-formatted sequence file
+        model_files_directory: Base directory containing model files referenced in config_dict
+        """
         if sequence_file is None:
             raise ValueError('Sequence file is required')
         if config_dict is None:
@@ -22,6 +44,12 @@ class CwlJobGenerator:
 
     @property
     def job(self):
+        """
+
+        Returns
+        -------
+        A dictionary containing the parameters needed to run a CWL job based on the constructor variables
+        """
         if self._job is None:
             job = dict.copy(self.config_dict)
             # If single model and multiple cores, expand models
@@ -36,4 +64,15 @@ class CwlJobGenerator:
         return self._job
 
     def write_json(self, output_file):
+        """
+        Writes this object's job dictionary to JSON format, using the provided file object.
+        Parameters
+        ----------
+        output_file: a file object, opened for writing
+
+        Returns
+        -------
+        None
+
+        """
         json.dump(self.job, output_file)

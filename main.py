@@ -4,6 +4,13 @@ from runner import PredictionRunner
 
 
 def arg_parser():
+    """
+    Creates an argument parser for command-line usage
+    Returns
+    -------
+    Argument parser to run predictions from command-line
+
+    """
     parser = argparse.ArgumentParser(description='Executor for predict-tf-binding')
     parser.add_argument("--workflow", type=str, default="predict-workflow.cwl")
     parser.add_argument("--sequence-file", type=str, help="FASTA file with sequences", required=True)
@@ -17,6 +24,23 @@ def arg_parser():
 
 
 def main(workflow, sequence_file, model_identifier, config_file_path, model_files_directory, output_directory):
+    """
+    Instantiates and runs a PredictionRunner
+
+    Parameters
+    ----------
+    workflow: Name of the CWL workflow to run
+    sequence_file: FASTA-format sequence file
+    model_identifier: Identifier for the model (e.g. E2F1_0001(JS)) in the config file
+    config_file_path: Path to the tracks.yaml config file
+    model_files_directory: Directory containing model files referenced in above config file
+    output_directory: Where to store output data and intermediate JSON jobs
+
+    Returns
+    -------
+    None (nothing yet)
+
+    """
     PredictionRunner(workflow, sequence_file, model_identifier, config_file_path, model_files_directory,
                      output_directory).run()
 

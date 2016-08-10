@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import sys
 import argparse
 import csv
+import sys
+
 
 def filter_scores(input, output, threshhold=0.0, delimiter='\t', source_index=3):
     """
@@ -22,6 +23,7 @@ def filter_scores(input, output, threshhold=0.0, delimiter='\t', source_index=3)
         # http://genome.ucsc.edu/FAQ/FAQformat.html#format1
         if float(row[source_index]) > threshhold:
             writer.writerow(row)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

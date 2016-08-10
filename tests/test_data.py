@@ -22,7 +22,7 @@ TEST_CONFIG_YAML = """- assembly: hg38
 """
 
 CONFIG_2X2 = yaml.load(TEST_CONFIG_YAML)[0]
-CONFIG_1X3 = {'cores': ['AAAA','CCCC','TTTT'],
+CONFIG_1X3 = {'cores': ['AAAA', 'CCCC', 'TTTT'],
               'kmers': [1],
               'model_filenames': ['model'],
               'width': 20,}

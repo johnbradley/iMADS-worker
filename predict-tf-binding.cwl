@@ -31,8 +31,6 @@ inputs:
     type: int[]
     inputBinding:
       prefix: -k
-      itemSeparator: ","
-      separate: true
   slope_intercept:
     type: boolean
     default: false

@@ -34,6 +34,18 @@ class PredictionRunnerTestCase(TestCase):
         with self.assertRaises(ValueError):
             PredictionRunner(self.workflow, self.sequence, self.model, None, self.models_dir, self.output_dir)
 
+    def test_generates_order_file_name(self):
+        p = PredictionRunner(self.workflow, self.sequence, self.model, self.config, self.models_dir, self.output_dir)
+        order_file_name = p.order_file_name
+        self.assertIn('.json', order_file_name)
+        self.assertIn(self.model, order_file_name)
+
+    def test_generates_ooutput_file_name(self):
+        p = PredictionRunner(self.workflow, self.sequence, self.model, self.config, self.models_dir, self.output_dir)
+        output_file_name = p.output_file_name
+        self.assertIn('.bed', output_file_name)
+        self.assertIn(self.model, output_file_name)
+
     @patch('runner.cwl_main')
     def test_runs_cwltool_gets_output(self, mock_cwl_main):
         p = PredictionRunner(self.workflow, self.sequence, self.model, self.config, self.models_dir, self.output_dir)

@@ -20,6 +20,15 @@ class CwlJobGeneratorTestCase(TestCase):
         g.write_json(output_file)
         self.assertNotEqual(output_file.tell(), 0, 'write_json should have written to the file')
 
+    def test_includes_output_filename(self):
+        g = CwlJobGenerator(test_data.CONFIG_2X2, 'seq.fa', '/models', 'myfile.out')
+        self.assertIn('output_filename', g.job)
+        self.assertEqual(g.job['output_filename'], 'myfile.out')
+
+    def test_omits_output_filename(self):
+        g = CwlJobGenerator(test_data.CONFIG_2X2, 'seq.fa', '/models')
+        self.assertNotIn('output_filename', g.job)
+
     def test_matrixes_models(self):
         g = CwlJobGenerator(test_data.CONFIG_1X3, 'seq.fa', '/models')
         self.assertEqual(len(test_data.CONFIG_1X3['model_filenames']), 1)

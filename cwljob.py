@@ -22,7 +22,7 @@ class CwlJobGenerator:
     """
     Generates CWL job orders - dictionaries ready for supplying to cwltool in JSON
     """
-    def __init__(self, config_dict, sequence_file, model_files_directory):
+    def __init__(self, config_dict, sequence_file, model_files_directory, output_filename=None):
         """
 
         Parameters
@@ -30,6 +30,7 @@ class CwlJobGenerator:
         config_dict: A dictionary containing model/track config (models, cores, slope_intercept, etc)
         sequence_file: Path to a fasta-formatted sequence file
         model_files_directory: Base directory containing model files referenced in config_dict
+        output_filename: The name of the file in which to store predictions, or None to let workflow decide
         """
         if sequence_file is None:
             raise ValueError('Sequence file is required')
@@ -40,6 +41,7 @@ class CwlJobGenerator:
         self.config_dict = config_dict
         self.sequence_file = sequence_file
         self.model_files_directory = model_files_directory
+        self.output_filename = output_filename
         self._job = None
 
     @property
@@ -60,6 +62,8 @@ class CwlJobGenerator:
             job['models'] = [make_file_dict(os.path.join(self.model_files_directory, model)) for model in
                              model_filenames]
             job['sequence'] = make_file_dict(self.sequence_file)
+            if self.output_filename:
+              job['output_filename'] = self.output_filename
             self._job = job
         return self._job
 

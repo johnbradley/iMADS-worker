@@ -1,7 +1,7 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: predict_tf_binding.py
-hints:
+requirements:
   DockerRequirement:
     dockerPull: dukegcb/predict-tf-binding
 inputs:

@@ -46,6 +46,7 @@ class PredictionRunner:
         output_directory: Where to store output data and intermediate JSON jobs
 
         """
+        self.timestamp = timestamp()
         self.workflow = workflow
         self.sequence_file = sequence_file
         self.model_identifier = model_identifier
@@ -90,7 +91,20 @@ class PredictionRunner:
         None
 
         """
-        self.job_generator = CwlJobGenerator(self.config, self.sequence_file, self.model_files_directory)
+        self.job_generator = CwlJobGenerator(self.config, self.sequence_file, self.model_files_directory, self.output_file_name)
+
+    def generate_file_name(self, ext):
+        """
+        Generates a file name based on the timestamp, sequence file, and model, and the
+        provided extension
+        Returns
+        -------
+        String containing a file name
+
+        """
+        basename = os.path.basename(self.sequence_file) if self.sequence_file else None
+        return '{}_{}_{}-prediction.{}'.format(self.timestamp, basename, self.model_identifier, ext)
+
 
     @property
     def order_file_name(self):
@@ -101,8 +115,17 @@ class PredictionRunner:
         String containing a file name to use for the JSON job
 
         """
-        return '{}_{}_{}-prediction.json'.format(timestamp(), os.path.basename(self.sequence_file),
-                                                 self.model_identifier)
+        return self.generate_file_name('json')
+
+    @property
+    def output_file_name(self):
+        """
+        Generates a bed file name based on the timestamp, sequence file, and model
+        Returns
+        -------
+        String containing a file name to use for the output
+        """
+        return self.generate_file_name('bed')
 
     @property
     def order_file_path(self):
@@ -133,8 +156,13 @@ class PredictionRunner:
         -------
         CWL output 'object' in a dictionary
         """
+        # Using main from cwltool here, instead of its internal building blocks
+        # Despite having to capture JSON output written to stdout and furnish
+        # command-line arguments in a list for argparse to parse,
+        # this is still simpler than the internal building blocks
         out, err = StringIO.StringIO(), StringIO.StringIO()
-        rc = cwl_main([self.workflow, self.order_file_path], stdout=out, stderr=err)
+        argsl = ['--outdir', self.output_directory, self.workflow, self.order_file_path]
+        rc = cwl_main(argsl, stdout=out, stderr=err)
         out_value, err_value = out.getvalue(), err.getvalue()
         out.close()
         err.close()

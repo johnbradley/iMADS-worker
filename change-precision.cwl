@@ -1,5 +1,5 @@
 cwlVersion: v1.0
-baseCommand: ['filter.py','--spaces']
+baseCommand: ['change_precision.py','--spaces']
 requirements:
   DockerRequirement:
     dockerPull: dukegcb/predict-tf-binding
@@ -9,11 +9,12 @@ inputs:
     type: File
     inputBinding:
       position: 1
-  filter_threshold:
-    type: float
+  precision:
+    type: int
+    default: 4
     inputBinding:
       position: 2
 outputs:
-  filtered:
+  changed:
     type: stdout
 

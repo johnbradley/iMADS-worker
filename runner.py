@@ -135,11 +135,14 @@ class PredictionRunner:
         """
         out, err = StringIO.StringIO(), StringIO.StringIO()
         rc = cwl_main([self.workflow, self.order_file_path], stdout=out, stderr=err)
+        out_value, err_value = out.getvalue(), err.getvalue()
+        out.close()
+        err.close()
         if rc == 0:
             # parse the output data into a dictionary
-            self.result = json.loads(out.getvalue())
+            self.result = json.loads(out_value)
         else:
-            raise RunnerException(err.getvalue())
+            raise RunnerException(err_value)
 
     def run(self):
         """

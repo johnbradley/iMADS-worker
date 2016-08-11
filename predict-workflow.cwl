@@ -11,10 +11,11 @@ inputs:
   slope_intercept: boolean
   transform: boolean
   filter_threshold: float
+  output_filename: string
 outputs:
   predictions:
     type: File
-    outputSource: filter/filtered
+    outputSource: name_output/output
 steps:
   predict:
     run: predict-tf-binding.cwl
@@ -40,5 +41,21 @@ steps:
       input_file: combine/combined
       filter_threshold: filter_threshold
     out: [filtered]
+  sort:
+    run: sort.cwl
+    in:
+      input_file: filter/filtered
+    out: [sorted]
+  change_precision:
+    run: change-precision.cwl
+    in:
+      input_file: sort/sorted
+    out: [changed]
+  name_output:
+    run: cat.cwl
+    in:
+      input_file: change_precision/changed
+      output_filename: output_filename
+    out: [output]
 
 

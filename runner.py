@@ -156,8 +156,13 @@ class PredictionRunner:
         -------
         CWL output 'object' in a dictionary
         """
+        # Using main from cwltool here, instead of its internal building blocks
+        # Despite having to capture JSON output written to stdout and furnish
+        # command-line arguments in a list for argparse to parse,
+        # this is still simpler than the internal building blocks
         out, err = StringIO.StringIO(), StringIO.StringIO()
-        rc = cwl_main([self.workflow, self.order_file_path, '--outdir', self.output_directory], stdout=out, stderr=err)
+        argsl = ['--outdir', self.output_directory, self.workflow, self.order_file_path]
+        rc = cwl_main(argsl, stdout=out, stderr=err)
         out_value, err_value = out.getvalue(), err.getvalue()
         out.close()
         err.close()

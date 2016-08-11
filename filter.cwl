@@ -1,5 +1,5 @@
 cwlVersion: v1.0
-baseCommand: filter.py
+baseCommand: ['filter.py','--spaces']
 requirements:
   DockerRequirement:
     dockerPull: dukegcb/predict-tf-binding
@@ -13,11 +13,6 @@ inputs:
     type: float
     inputBinding:
       position: 2
-  delimiter:
-    type: string
-    default: ' '
-    inputBinding:
-      position: 3
 outputs:
   filtered:
     type: stdout

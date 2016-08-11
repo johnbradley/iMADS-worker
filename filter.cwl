@@ -1,5 +1,8 @@
 cwlVersion: v1.0
 baseCommand: filter.py
+requirements:
+  DockerRequirement:
+    dockerPull: dukegcb/predict-tf-binding
 class: CommandLineTool
 inputs:
   input_file:

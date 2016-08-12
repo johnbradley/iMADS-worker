@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from load import ConfigLoader
+from predict_service.load import ConfigLoader
 
 
 class CwlJobGeneratorTestCase(TestCase):
     def test_loads_configs(self):
-        metadata_file_name = 'tests/test_config.yaml'
+        metadata_file_name = 'predict_service/tests/test_config.yaml'
         model_id = 'LLLL_5555(CD)'
         c = ConfigLoader(model_id, metadata_file_name)
         config = c.config

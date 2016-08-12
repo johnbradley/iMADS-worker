@@ -2,7 +2,7 @@ import tempfile
 from unittest import TestCase
 
 import test_data
-from cwljob import CwlJobGenerator
+from predict_service.cwljob import CwlJobGenerator
 
 
 class CwlJobGeneratorTestCase(TestCase):

@@ -2,7 +2,7 @@
 
 import argparse
 
-from runner import PredictionRunner
+from predict_service.runner import PredictionRunner
 
 
 def arg_parser():
@@ -14,7 +14,7 @@ def arg_parser():
 
     """
     parser = argparse.ArgumentParser(description='Executor for predict-tf-binding')
-    parser.add_argument("--workflow", type=str, default="predict-workflow.cwl")
+    parser.add_argument("--workflow", type=str, default="predict_service/predict-workflow.cwl")
     parser.add_argument("--sequence-file", type=str, help="FASTA file with sequences", required=True)
     parser.add_argument("--model-identifier", type=str, help="identifier for model, e.g. E2F1_0001(JS)", required=True)
     parser.add_argument("--config-file-path", type=str, help="YAML metadata file containing configuration parameters",

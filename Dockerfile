@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 ADD . /opt/predict-tf-binding-service/
 ENV PATH /opt/predict-tf-binding-service/:$PATH
 
-CMD main.py
+CMD predict_service/main.py

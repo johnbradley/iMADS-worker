@@ -2,7 +2,7 @@
 
 import argparse
 
-from predict_service.runner import PredictionRunner
+from runner import PredictionRunner
 
 
 def arg_parser():
@@ -25,7 +25,7 @@ def arg_parser():
     return parser
 
 
-def main(workflow, sequence_file, model_identifier, config_file_path, model_files_directory, output_directory):
+def run(workflow, sequence_file, model_identifier, config_file_path, model_files_directory, output_directory):
     """
     Instantiates and runs a PredictionRunner
 
@@ -47,10 +47,11 @@ def main(workflow, sequence_file, model_identifier, config_file_path, model_file
                      output_directory).run()
     print predictions['path']
 
-
-
-if __name__ == '__main__':
+def main():
     parser = arg_parser()
     args = parser.parse_args()
-    main(args.workflow, args.sequence_file, args.model_identifier, args.config_file_path, args.model_files_directory,
+    run(args.workflow, args.sequence_file, args.model_identifier, args.config_file_path, args.model_files_directory,
          args.output_directory)
+
+if __name__ == '__main__':
+    main()

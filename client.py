@@ -130,4 +130,4 @@ if __name__ == '__main__':
     c = Config()
     # Local overrides
     cli = PredictionsClient(c)
-    cli.claim_next_job()
+    cli.claim_many()

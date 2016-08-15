@@ -14,6 +14,7 @@ import os
 
 
 BASE_URL = "http://localhost:5000/api/v1"
+TEST_SEQUENCE_FILE = '/Users/dcl9/Data/scratch/predictor-testdata/sequence.fa'
 
 def make_url(part):
     return "{}/{}".format(BASE_URL, part)
@@ -115,10 +116,42 @@ def claim_many():
         time.sleep(0.5)
 
 
+def error_next_job():
+    jobs = get_new_jobs()
+    if not jobs:
+        print("No jobs available to claim.")
+    else:
+        job = jobs[0]
+    mark_job_error(job, "Processing failed with error DAN-8.")
+
+def create_job():
+    # upload sequence
+    url = make_url("sequences")
+    sequence_data = read_data(TEST_SEQUENCE_FILE)
+    data = {'data': base64.b64encode(sequence_data)}
+    r = requests.post(url, json=data)
+    r.raise_for_status()
+    sequence_id = r.json()['id']
+
+    # make new job
+    url = make_url("jobs")
+    data = {
+        'job_type': 'PREDICTION',
+        'sequence_id': sequence_id,
+        'model_name': 'HisMadMax_0007(NS)'
+    }
+    r = requests.post(url, json=data)
+    r.raise_for_status()
+    print("Job ID:", r.json()['id'])
+
+
+
 COMMANDS = {
     "list": list_jobs,
     "claim": claim_next_job,
+    "error": error_next_job,
     "loop": claim_many,
+    "makejob": create_job
 }
 
 

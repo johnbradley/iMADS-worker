@@ -1,8 +1,10 @@
 from predict_service.runner import PredictionRunner
 import json
 
+
 class WorkerException(Exception):
     pass
+
 
 class PredictionsWorker(object):
 

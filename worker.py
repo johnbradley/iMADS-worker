@@ -1,5 +1,4 @@
 from predict_service.runner import PredictionRunner
-import json
 
 
 class WorkerException(Exception):
@@ -8,27 +7,19 @@ class WorkerException(Exception):
 
 class PredictionsWorker(object):
 
+    def __init__(self, config):
+        self.config = config
+
     @staticmethod
-    def load_config(config_path):
-        with open(config_path, 'r') as f:
-            return json.load(f)
-
-    def __init__(self, config_path):
-        self.config = PredictionsWorker.load_config(config_path)
-
-    def _make_prediction_job(self, sequence_file, model_identifier):
-        job = dict(self.config)
-        job['input_sequence_file'] = sequence_file
-        job['model_identifier'] = model_identifier
-        return job
+    def extract_predictions(result):
+        return result.get('path')
 
     def run(self, sequence_file, model_identifier):
-        job = self._make_prediction_job(sequence_file, model_identifier)
         workflow = PredictionRunner.predict_workflow()
         runner = PredictionRunner(workflow,
                                   sequence_file,
                                   model_identifier,
-                                  job['config_file_path'],
-                                  job['model_files_directory'],
-                                  job['output_directory'])
-        return runner.run()
+                                  self.config.config_file,
+                                  self.config.model_files_dir,
+                                  self.config.output_dir)
+        return self.extract_predictions(runner.run())

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import os
 
 from runner import PredictionRunner
 
@@ -13,8 +14,9 @@ def arg_parser():
     Argument parser to run predictions from command-line
 
     """
+    my_dir = os.path.dirname(os.path.realpath(__file__))
     parser = argparse.ArgumentParser(description='Executor for predict-tf-binding')
-    parser.add_argument("--workflow", type=str, default="predict-workflow.cwl")
+    parser.add_argument("--workflow", type=str, default=os.path.join(my_dir, "predict-workflow.cwl"))
     parser.add_argument("--sequence-file", type=str, help="FASTA file with sequences", required=True)
     parser.add_argument("--model-identifier", type=str, help="identifier for model, e.g. E2F1_0001(JS)", required=True)
     parser.add_argument("--config-file-path", type=str, help="YAML metadata file containing configuration parameters",

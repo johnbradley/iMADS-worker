@@ -29,6 +29,12 @@ class RunnerException(Exception):
     pass
 
 class PredictionRunner:
+
+    @classmethod
+    def predict_workflow(cls):
+        my_dir = os.path.dirname(os.path.realpath(__file__))
+        return os.path.join(my_dir, "predict-workflow.cwl")
+
     """
     Class to encapsulate running of prediction on custom sequences using a CWL workflow and internal model/metadata
     """

@@ -1,1 +1,5 @@
-{"output_directory": "/Users/dcl9/Data/scratch/predictor-output", "image_name": "dukegcb/predict-tf-binding-service", "model_files_directory": "/Users/dcl9/Data/scratch/predictor-testdata", "config_file_path": "/Users/dcl9/Data/scratch/predictor-testdata/tracks.yaml"}
+{
+  "output_directory": "/Users/dcl9/Data/scratch/predictor-output",
+  "model_files_directory": "/Users/dcl9/Data/scratch/predictor-testdata",
+  "config_file_path": "/Users/dcl9/Data/scratch/predictor-testdata/tracks.yaml"
+}

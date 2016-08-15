@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 ADD . /opt/tf-predictions-worker/
 ENV PATH /opt/tf-predictions-worker/:$PATH
 
-CMD python jobsimulator.py loop
+CMD client.py

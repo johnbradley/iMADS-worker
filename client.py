@@ -105,15 +105,22 @@ class PredictionsClient(object):
         jobs = self.get_new_jobs()
         if jobs:
             job = jobs[0]
+            print('Claiming job\n{}'.format(job))
             self.claim_job(job)
             try:
+                print('Starting predictions\n{}'.format(job))
                 bed_file_data = self.make_predictions(job)
+                print('Saving predictions for job with id {}:\n{}\n...'.format(job['id'], bed_file_data[:50]))
                 self.save_custom_predictions(job, base64.b64encode(bed_file_data))
+                print('Completing job with id {}'.format(job['id']))
                 self.mark_job_complete(job)
+                print('Completed job with id {}'.format(job['id']))
             except Exception as ex:
+                print('Exception making predictions', ex)
                 self.mark_job_error(job, str(ex))
 
     def claim_many(self):
+        print('Starting predictions worker, polling every {}s'.format(self.claim_interval))
         pool = Pool()
         while True:
             pool.apply_async(claim_next_job_async, (self,))

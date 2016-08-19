@@ -1,6 +1,7 @@
 avro==1.8.1
 cwltool==1.0.20160714182449
 html5lib==0.999999999
+-e git+https://github.com/BD2KGenomics/toil.git@dbbd4ed282ab8503502ac2c1650c000b91b4a686#egg=toil
 isodate==0.5.4
 keepalive==0.5
 mistune==0.7.3

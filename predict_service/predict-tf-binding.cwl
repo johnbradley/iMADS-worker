@@ -36,6 +36,11 @@ inputs:
     default: false
     inputBinding:
       prefix: -i
+  skip_size_check:
+    type: boolean
+    default: true
+    inputBinding:
+      prefix: --skip-size-check
   transform:
     type: boolean
     default: false

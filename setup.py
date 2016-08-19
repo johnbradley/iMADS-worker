@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='Predict-TF-Binding-Service',
-  version='0.1.0',
+  version='0.1.1',
   description='Command-line tool to run cwl workflows for TF binding predictions.',
   packages=['predict_service'],
   package_data={'predict_service': ['*.cwl']},

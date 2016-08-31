@@ -41,15 +41,10 @@ steps:
       input_file: combine/combined
       filter_threshold: filter_threshold
     out: [filtered]
-  sort:
-    run: sort.cwl
-    in:
-      input_file: filter/filtered
-    out: [sorted]
   change_precision:
     run: change-precision.cwl
     in:
-      input_file: sort/sorted
+      input_file: filter/filtered
     out: [changed]
   name_output:
     run: cat.cwl

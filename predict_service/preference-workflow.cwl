@@ -68,16 +68,10 @@ steps:
       tf1_y: tf1_y
       tf2_y: tf2_y
     out: [preferences]
-  filter:
-    run: filter.cwl
-    in:
-      input_file: preference/preferences
-      filter_threshold: filter_threshold
-    out: [filtered]
   change_precision:
     run: change-precision.cwl
     in:
-      input_file: filter/filtered
+      input_file: preference/preferences
     out: [changed]
   name_output:
     run: cat.cwl

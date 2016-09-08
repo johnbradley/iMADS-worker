@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import requests
+from requests.auth import HTTPBasicAuth
 import base64
 from multiprocessing import Pool
 from worker import PredictionsWorker
@@ -34,39 +35,41 @@ class PredictionsClient(object):
     def make_url(self, part):
         return "{}/{}".format(self.config.base_url, part)
 
+    def _make_auth(self):
+        return HTTPBasicAuth(self.config.worker_username, self.config.worker_password)
+
     def get_new_jobs(self):
         url = self.make_url("jobs?job_status={}".format(Status.new))
-        r = requests.get(url)
+        r = requests.get(url, auth=self._make_auth())
         return r.json()['result']
 
     def claim_job(self, job):
-        url = self.make_url("jobs/{}".format(job['id']))
-        data = {'job_status': Status.running}
-        r = requests.put(url, json=data)
-        r.raise_for_status()
+        self._update_job_status(job, Status.running)
 
     def mark_job_complete(self, job):
-        url = self.make_url("jobs/{}".format(job['id']))
-        data = {'job_status': Status.complete}
-        r = requests.put(url, json=data)
-        r.raise_for_status()
+        self._update_job_status(job, Status.complete)
 
     def mark_job_error(self, job, message):
+        self._update_job_status(job, Status.error, error_message=message)
+
+    def _update_job_status(self, job, status, error_message=None):
         url = self.make_url("jobs/{}".format(job['id']))
-        data = {'job_status': Status.error, 'error_message': message}
-        r = requests.put(url, json=data)
+        data = {'job_status': status}
+        if error_message:
+            data['error_message'] = error_message
+        r = requests.put(url, auth=self._make_auth(), json=data)
         r.raise_for_status()
 
     def get_sequence(self, job):
         url = self.make_url("sequences/{}".format(job['sequence_list']))
-        r = requests.get(url)
+        r = requests.get(url, auth=self._make_auth())
         r.raise_for_status()
         data = r.json()['data']
         return base64.b64decode(data)
 
     def save_custom_predictions(self, job, bed_file_data):
         url = self.make_url("custom_predictions")
-        r = requests.post(url, json={
+        r = requests.post(url, auth=self._make_auth(), json={
             'job_id': job['id'],
             'model_name': job['model_name'],
             'bed_data': bed_file_data,

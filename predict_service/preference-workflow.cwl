@@ -3,6 +3,7 @@ class: Workflow
 requirements:
   - class: ScatterFeatureRequirement
 inputs:
+  # Predictions
   sequence: File
   models1: File[]
   models2: File[]
@@ -11,8 +12,11 @@ inputs:
   kmers: int[]
   slope_intercept: boolean
   transform: boolean
+  # Preferences
   tf1: string
   tf2: string
+  tf1_threshold: float
+  tf2_threshold: float
   output_filename: string
 outputs:
   preferences:
@@ -63,12 +67,20 @@ steps:
       tf2: tf2
       tf2_bed_file: combine2/combined
     out: [preferences]
-  # filter:
+  filter:
+    run: filter-tf-preference-threshold.cwl
+    in:
+      tf1_bed_file: combine1/combined
+      tf1_threshold: tf1_threshold
+      tf2_bed_file: combine2/combined
+      tf2_threshold: tf2_threshold
+      prefs_bed_file: preference/preferences
+    out: [filtered_preferences]
   # change_precision?
   name_output:
     run: cat.cwl
     in:
-      input_file: preference/preferences
+      input_file: filter/filtered_preferences
       output_filename: output_filename
     out: [output]
 

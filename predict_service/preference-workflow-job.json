@@ -38,5 +38,7 @@
 
   "tf1":"E2f1",
   "tf2":"E2f4",
+  "tf1_threshold": 0.1933,
+  "tf2_threshold": 0.162,
   "output_filename": "E2f1_vs_E2f4_workflow.bed"
 }

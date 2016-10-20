@@ -1,0 +1,42 @@
+{
+  "sequence": {
+    "class": "File",
+    "path": "/Users/dcl9/Data/scratch/hg38-top793.fa"
+  },
+  "models1": [
+    {
+      "class": "File",
+      "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1_250nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGC_1a2a3mer_format.model"
+    },
+    {
+      "class": "File",
+      "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1_250nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGG_1a2a3mer_format.model"
+    }
+  ],
+  "models2": [
+    {
+      "class": "File",
+      "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F4_500nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGC_1a2a3mer_format.model"
+    },
+    {
+      "class": "File",
+      "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F4_500nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGG_1a2a3mer_format.model"
+    }
+  ],
+  "cores": [
+    "GCGC",
+    "GCGG"
+  ],
+  "width": 20,
+  "kmers": [
+    1,
+    2,
+    3
+  ],
+  "slope_intercept": false,
+  "transform": true,
+
+  "tf1":"E2f1",
+  "tf2":"E2f4",
+  "output_filename": "E2f1_vs_E2f4_workflow.bed"
+}

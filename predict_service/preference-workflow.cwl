@@ -11,11 +11,8 @@ inputs:
   kmers: int[]
   slope_intercept: boolean
   transform: boolean
-  filter_threshold: float
-  family: string
-  tf1_x: string
-  tf1_y: string
-  tf2_y: string
+  tf1: string
+  tf2: string
   output_filename: string
 outputs:
   preferences:
@@ -61,22 +58,17 @@ steps:
   preference:
     run: predict-tf-preference.cwl
     in:
-      predictions1: combine1/combined
-      predictions2: combine2/combined
-      family: family
-      tf1_x: tf1_x
-      tf1_y: tf1_y
-      tf2_y: tf2_y
+      tf1: tf1
+      tf1_bed_file: combine1/combined
+      tf2: tf2
+      tf2_bed_file: combine2/combined
     out: [preferences]
-  change_precision:
-    run: change-precision.cwl
-    in:
-      input_file: preference/preferences
-    out: [changed]
+  # filter:
+  # change_precision?
   name_output:
     run: cat.cwl
     in:
-      input_file: change_precision/changed
+      input_file: preference/preferences
       output_filename: output_filename
     out: [output]
 

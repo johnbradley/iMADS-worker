@@ -2,7 +2,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 requirements:
   DockerRequirement:
-    dockerPull: predict-tf-preference
+    dockerPull: dukegcb/predict-tf-preference
 inputs:
   tf1_bed_file:
     type: File

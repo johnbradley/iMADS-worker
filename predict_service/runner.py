@@ -3,7 +3,7 @@ import datetime
 import json
 import os
 import StringIO
-from cwljob import CwlJobGenerator
+from cwljob import PredictionsCwlJobGenerator, PreferencesCwlJobGenerator
 from cwltool.main import main as cwl_main
 from load import ConfigLoader
 
@@ -22,24 +22,34 @@ def timestamp(fmt='%Y-%m-%d_%H-%M-%S'):
     return datetime.datetime.now().strftime(fmt)
 
 
+def predict_workflow():
+    my_dir = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(my_dir, "predict-workflow.cwl")
+
+
+def preference_workflow():
+    my_dir = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(my_dir, "preference-workflow.cwl")
+
+
 class ConfigNotFoundException(Exception):
     pass
+
 
 class RunnerException(Exception):
     pass
 
+
 class PredictionRunner:
 
-    @classmethod
-    def predict_workflow(cls):
-        my_dir = os.path.dirname(os.path.realpath(__file__))
-        return os.path.join(my_dir, "predict-workflow.cwl")
+    strategy_predict = (predict_workflow(), PredictionsCwlJobGenerator, 'predictions')
+    strategy_preference = (preference_workflow(), PreferencesCwlJobGenerator, 'preferences')
 
     """
     Class to encapsulate running of prediction on custom sequences using a CWL workflow and internal model/metadata
     """
-    def __init__(self, workflow, sequence_file, model_identifier, config_file_path, model_files_directory,
-                 output_directory):
+    def __init__(self, sequence_file, model_identifier, config_file_path, model_files_directory,
+                 output_directory, strategy=strategy_predict):
         """
         Creates a PredictionRunner ready to run
         Parameters
@@ -50,10 +60,13 @@ class PredictionRunner:
         config_file_path: Path to the tracks.yaml config file
         model_files_directory: Directory containing model files referenced in above config file
         output_directory: Where to store output data and intermediate JSON jobs
+        job_generator: Class to use for generating CWL jobs
 
         """
         self.timestamp = timestamp()
-        self.workflow = workflow
+        self.workflow = strategy[0]
+        self.job_generator_class = strategy[1]
+        self.result_key = strategy[2]
         self.sequence_file = sequence_file
         self.model_identifier = model_identifier
         self.config_file_path = config_file_path
@@ -97,7 +110,7 @@ class PredictionRunner:
         None
 
         """
-        self.job_generator = CwlJobGenerator(self.config, self.sequence_file, self.model_files_directory, self.output_file_name)
+        self.job_generator = self.job_generator_class(self.config, self.sequence_file, self.model_files_directory, self.output_file_name)
 
     def generate_file_name(self, ext):
         """
@@ -188,4 +201,4 @@ class PredictionRunner:
         """
         self.write_json_order()
         self._run_workflow()
-        return self.result['predictions']
+        return self.result[self.result_key]

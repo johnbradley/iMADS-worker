@@ -1,0 +1,7 @@
+{
+  "output_filename": "predict-tf-preference-test.bed",
+  "tf1": "E2f1",
+  "tf2": "E2f4",
+  "tf1_bed_file": {"class":"File","path":"/Users/dcl9/Code/python/predict-tf-binding-service/predict_service/E2f1_chr10_GCGC.bed"},
+  "tf2_bed_file": {"class":"File","path":"/Users/dcl9/Code/python/predict-tf-binding-service/predict_service/E2f4_chr10_GCGC.bed"}
+}

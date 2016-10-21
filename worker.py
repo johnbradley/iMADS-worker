@@ -15,6 +15,7 @@ class PredictionsWorker(object):
         return result.get('path')
 
     def run(self, sequence_file, model_identifier):
+        # TODO: Check model identifier for vs and run preferences instead
         workflow = PredictionRunner.predict_workflow()
         runner = PredictionRunner(workflow,
                                   sequence_file,

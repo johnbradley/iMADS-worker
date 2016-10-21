@@ -1,3 +1,5 @@
 #!/bin/bash
-
-cwltool --tmpdir-prefix=$(pwd)/temp --tmp-outdir-prefix=$(pwd)/temp preference-workflow.cwl preference-workflow-job.json
+source ../env/bin/activate
+mkdir -p temp/t
+cwltool --tmpdir-prefix=$(pwd)/temp/t --tmp-outdir-prefix=$(pwd)/temp/t preference-workflow.cwl preference-workflow-job.json
+rm -r temp

@@ -4,7 +4,6 @@ html5lib==0.999999999
 isodate==0.5.4
 keepalive==0.5
 mistune==0.7.3
-git+https://github.com/Duke-GCB/Predict-TF-Binding-Service.git@0.1.2#egg=predict_service
 pyparsing==2.1.8
 PyYAML==3.11
 rdflib==4.2.1

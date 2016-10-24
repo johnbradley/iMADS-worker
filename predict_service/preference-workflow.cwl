@@ -12,6 +12,7 @@ inputs:
   kmers: int[]
   slope_intercept: boolean
   transform: boolean
+  core_start: int?
   # Preferences
   tf1: string
   tf2: string
@@ -35,6 +36,7 @@ steps:
       kmers: kmers
       slope_intercept: slope_intercept
       transform: transform
+      core_start: core_start
     out: [predictions]
   predict2:
     run: predict-tf-binding.cwl
@@ -48,6 +50,7 @@ steps:
       kmers: kmers
       slope_intercept: slope_intercept
       transform: transform
+      core_start: core_start
     out: [predictions]
   combine1:
     run: combine.cwl

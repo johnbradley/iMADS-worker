@@ -46,6 +46,10 @@ inputs:
     default: false
     inputBinding:
       prefix: -t
+  core_start:
+    type: int?
+    inputBinding:
+      prefix: --core-start
   output_filename:
     type: string
     default: "predictions.bed"

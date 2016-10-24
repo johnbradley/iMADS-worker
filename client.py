@@ -4,11 +4,12 @@ from __future__ import print_function
 import requests
 from requests.auth import HTTPBasicAuth
 import base64
-from multiprocessing import Pool
+from multiprocessing import Pool, TimeoutError
 from worker import PredictionsWorker
 import time
 import tempfile
 import os
+import traceback
 from config import Config
 
 
@@ -41,7 +42,15 @@ class PredictionsClient(object):
     def get_new_jobs(self):
         url = self.make_url("jobs?job_status={}".format(Status.new))
         r = requests.get(url, auth=self._make_auth())
+        r.raise_for_status()
         return r.json()['result']
+
+    def get_first_new_job(self):
+        new_jobs = self.get_new_jobs()
+        if new_jobs:
+            return new_jobs[0]
+        else:
+            return None
 
     def claim_job(self, job):
         self._update_job_status(job, Status.running)
@@ -104,40 +113,58 @@ class PredictionsClient(object):
             print('     model:', job['model_name'], ' type:', job['type'], 'sequence:', job['sequence_list'])
         print()
 
-    def claim_next_job(self):
-        jobs = self.get_new_jobs()
-        if jobs:
-            job = jobs[0]
-            print('Claiming job\n{}'.format(job))
-            self.claim_job(job)
-            try:
-                print('Starting predictions\n{}'.format(job))
-                bed_file_data = self.make_predictions(job)
-                print('Saving predictions for job with id {}:\n{}\n...'.format(job['id'], bed_file_data[:50]))
-                self.save_custom_predictions(job, base64.b64encode(bed_file_data))
-                print('Completing job with id {}'.format(job['id']))
-                self.mark_job_complete(job)
-                print('Completed job with id {}'.format(job['id']))
-            except Exception as ex:
-                print('Exception making predictions', ex)
-                self.mark_job_error(job, str(ex))
+    def run_job(self, job):
+        print('Starting predictions\n{}'.format(job))
+        bed_file_data = self.make_predictions(job)
+        print('Saving predictions for job with id {}:\n{}\n...'.format(job['id'], bed_file_data[:50]))
+        self.save_custom_predictions(job, base64.b64encode(bed_file_data))
+        print('Completing job with id {}'.format(job['id']))
+        self.mark_job_complete(job)
+        print('Completed job with id {}'.format(job['id']))
 
-    def claim_many(self):
+    def claim_loop(self):
         print('Starting predictions worker, polling every {}s'.format(self.claim_interval))
         pool = Pool()
+        async_results = []
         while True:
-            pool.apply_async(claim_next_job_async, (self,))
+            # Check for the the first job
+            job = self.get_first_new_job()
+            if job:
+                # Claim it
+                print('Claiming job\n{}'.format(job))
+                self.claim_job(job)
+                result = pool.apply_async(run_job, (self, job))
+                # Add the async_result and the job to the dictionary so that we can check on it later
+                async_results.append(dict(job=job, result=result))
+            # Sleep
             time.sleep(self.claim_interval)
-            # Result is currently discarded
-
+            # Check on results and cleanup
+            to_remove = list()
+            for index, result_dict in enumerate(async_results):
+                job, async_result = result_dict['job'], result_dict['result']
+                try:
+                    # Don't wait to see if the result is ready
+                    result = async_result.get(timeout=0)
+                    # If we reach this line, the job has been completed
+                    to_remove.append(index)
+                except TimeoutError:
+                    # Result not ready, we'll try again later
+                    pass
+                except Exception:
+                    # There was some exception, log it and send it back
+                    s = traceback.format_exc()
+                    print('Exception making predictions', s)
+                    self.mark_job_error(job, str(s))
+                    to_remove.append(index)
+            # Now remove the completed or errored jobs
+            async_results = [r for index, r in enumerate(async_results) if index not in to_remove]
 
 # apply_async does not work on instance methods, so we declare a simple function
-def claim_next_job_async(cli):
-    return cli.claim_next_job()
-
+def run_job(cli, job):
+    cli.run_job(job)
 
 if __name__ == '__main__':
     c = Config()
     # Local overrides
     cli = PredictionsClient(c)
-    cli.claim_many()
+    cli.claim_loop()

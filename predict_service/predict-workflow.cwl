@@ -11,6 +11,7 @@ inputs:
   slope_intercept: boolean
   transform: boolean
   filter_threshold: float
+  core_start: int?
   output_filename: string
 outputs:
   predictions:
@@ -29,6 +30,7 @@ steps:
       kmers: kmers
       slope_intercept: slope_intercept
       transform: transform
+      core_start: core_start
     out: [predictions]
   combine:
     run: combine.cwl

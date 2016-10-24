@@ -3,7 +3,7 @@
     "class": "File",
     "path": "/Users/dcl9/Data/scratch/hg38-top793.fa"
   },
-  "models1": [
+  "models": [
     {
       "class": "File",
       "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1_250nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGC_1a2a3mer_format.model"
@@ -11,16 +11,6 @@
     {
       "class": "File",
       "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F1_250nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGG_1a2a3mer_format.model"
-    }
-  ],
-  "models2": [
-    {
-      "class": "File",
-      "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F4_500nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGC_1a2a3mer_format.model"
-    },
-    {
-      "class": "File",
-      "path": "/Users/dcl9/Data/tf-dna-predictions/models/E2F4_500nM_Bound_filtered_normalized_logistic_transformed_20bp_GCGG_1a2a3mer_format.model"
     }
   ],
   "cores": [
@@ -35,11 +25,7 @@
   ],
   "slope_intercept": false,
   "transform": true,
-
-  "tf1":"E2f1",
-  "tf2":"E2f4",
-  "tf1_threshold": 0.1933,
-  "tf2_threshold": 0.162,
+  "filter_threshold": 0.1933,
   "core_start": null,
-  "output_filename": "E2f1_vs_E2f4_workflow.bed"
+  "output_filename": "E2f1_workflow.bed"
 }

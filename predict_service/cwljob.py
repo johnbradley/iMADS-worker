@@ -83,6 +83,9 @@ class PredictionsCwlJobGenerator(CwlJobGeneratorBase):
             job['models'] = [make_file_dict(os.path.join(self.model_files_directory, model)) for model in
                              model_filenames]
             job['sequence'] = make_file_dict(self.sequence_file)
+            del job['protein']
+            del job['model_filenames']
+            del job['assembly']
             if self.output_filename:
               job['output_filename'] = self.output_filename
             self._job = job

@@ -153,7 +153,7 @@ class PredictionsClient(object):
                 except Exception:
                     # There was some exception, log it and send it back
                     s = traceback.format_exc()
-                    print('Exception making predictions', s)
+                    print('Exception making predictions:\n', s)
                     self.mark_job_error(job, str(s))
                     to_remove.append(index)
             # Now remove the completed or errored jobs

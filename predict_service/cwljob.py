@@ -83,9 +83,8 @@ class PredictionsCwlJobGenerator(CwlJobGeneratorBase):
             job['models'] = [make_file_dict(os.path.join(self.model_files_directory, model)) for model in
                              model_filenames]
             job['sequence'] = make_file_dict(self.sequence_file)
-            del job['protein']
-            del job['model_filenames']
-            del job['assembly']
+            # Delete keys that are not used later. Use pop to ignore if not present
+            [job.pop(k,None) for k in ('protein','model_filenames','assembly')]
             if self.output_filename:
               job['output_filename'] = self.output_filename
             self._job = job
@@ -121,9 +120,8 @@ class PreferencesCwlJobGenerator(CwlJobGeneratorBase):
             job['tf1'], job['tf2'] = job['proteins']
             job['tf1_threshold'], job['tf2_threshold'] = job['filter_thresholds']
             job['sequence'] = make_file_dict(self.sequence_file)
-            del job['proteins']
-            del job['model_filenames']
-            del job['assembly']
+            # Delete keys that are not used later. Use pop to ignore if not present
+            [job.pop(k,None) for k in ('proteins','model_filenames','assembly')]
             if self.output_filename:
               job['output_filename'] = self.output_filename
             self._job = job

@@ -128,14 +128,19 @@ class PredictionsClient(object):
         async_results = []
         while True:
             # Check for the the first job
-            job = self.get_first_new_job()
-            if job:
-                # Claim it
-                print('Claiming job\n{}'.format(job))
-                self.claim_job(job)
-                result = pool.apply_async(run_job, (self, job))
-                # Add the async_result and the job to the dictionary so that we can check on it later
-                async_results.append(dict(job=job, result=result))
+            try:
+                job = self.get_first_new_job()
+                if job:
+                    # Claim it
+                    print('Claiming job\n{}'.format(job))
+                    self.claim_job(job)
+                    result = pool.apply_async(run_job, (self, job))
+                    # Add the async_result and the job to the dictionary so that we can check on it later
+                    async_results.append(dict(job=job, result=result))
+            except:
+                print('Exception checking for prediction jobs:\n', traceback.format_exc())
+                time.sleep(10)
+
             # Sleep
             time.sleep(self.claim_interval)
             # Check on results and cleanup
@@ -150,7 +155,7 @@ class PredictionsClient(object):
                 except TimeoutError:
                     # Result not ready, we'll try again later
                     pass
-                except Exception:
+                except:
                     # There was some exception, log it and send it back
                     s = traceback.format_exc()
                     print('Exception making predictions:\n', s)

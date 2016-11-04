@@ -49,7 +49,7 @@ class PredictionRunner:
     Class to encapsulate running of prediction on custom sequences using a CWL workflow and internal model/metadata
     """
     def __init__(self, sequence_file, model_identifier, config_file_path, model_files_directory,
-                 output_directory, strategy=strategy_predict):
+                 output_directory, strategy=strategy_predict, tmp_prefix=None):
         """
         Creates a PredictionRunner ready to run
         Parameters
@@ -60,7 +60,8 @@ class PredictionRunner:
         config_file_path: Path to the tracks.yaml config file
         model_files_directory: Directory containing model files referenced in above config file
         output_directory: Where to store output data and intermediate JSON jobs
-        job_generator: Class to use for generating CWL jobs
+        strategy: Tuple of (CWL workflow, CwlJobGenerator, and mode)
+        tmp_prefix: Prefix to use with CWL tmpdir and tmp-outdir
 
         """
         self.timestamp = timestamp()
@@ -72,6 +73,7 @@ class PredictionRunner:
         self.config_file_path = config_file_path
         self.model_files_directory = model_files_directory
         self.output_directory = output_directory
+        self.tmp_prefix = tmp_prefix
         # Force config and job loading to validate inputs
         self._load()
 
@@ -180,7 +182,11 @@ class PredictionRunner:
         # command-line arguments in a list for argparse to parse,
         # this is still simpler than the internal building blocks
         out, err = StringIO.StringIO(), StringIO.StringIO()
-        argsl = ['--outdir', self.output_directory, self.workflow, self.order_file_path]
+        argsl = ['--outdir', self.output_directory]
+        if self.tmp_prefix:
+            argsl.extend(['--tmpdir-prefix', self.tmp_prefix])
+            argsl.extend(['--tmp-outdir-prefix', self.tmp_prefix])
+        argsl.extend([self.workflow, self.order_file_path])
         rc = cwl_main(argsl, stdout=out, stderr=err)
         out_value, err_value = out.getvalue(), err.getvalue()
         out.close()

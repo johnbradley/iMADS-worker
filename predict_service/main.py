@@ -22,11 +22,12 @@ def arg_parser():
     parser.add_argument("--model-files-directory", type=str, help="Location of model files referenced in config YAML",
                         required=True)
     parser.add_argument("--output-directory", type=str, help="Location of output predictions", required=True)
+    parser.add_argument("--tmp-prefix", type=str, help="cwltool tmpdir and tmp-outdir prefix", required=False)
     return parser
 
 
 def run(sequence_file, model_identifier, config_file_path, model_files_directory, output_directory,
-        strategy):
+        strategy, tmp_prefix):
     """
     Instantiates and runs a PredictionRunner
 
@@ -37,7 +38,8 @@ def run(sequence_file, model_identifier, config_file_path, model_files_directory
     config_file_path: Path to the tracks.yaml config file
     model_files_directory: Directory containing model files referenced in above config file
     output_directory: Where to store output data and intermediate JSON jobs
-    strategy: CWL workflow and job generator tuple
+    strategy: CWL workflow, job generator, and mode tuple
+    tmp_prefix: Path to prefix for CWL tmpdir and tmp-outdir (or None)
 
     Returns
     -------
@@ -45,8 +47,7 @@ def run(sequence_file, model_identifier, config_file_path, model_files_directory
 
     """
     predictions = PredictionRunner(sequence_file, model_identifier, config_file_path, model_files_directory,
-                     output_directory, strategy).run()
-    print predictions['path']
+                     output_directory, strategy, tmp_prefix).run()
 
 
 def main():
@@ -54,7 +55,7 @@ def main():
     args = parser.parse_args()
     strategies = {'predictions': PredictionRunner.strategy_predict, 'preferences': PredictionRunner.strategy_preference}
     run(args.sequence_file, args.model_identifier, args.config_file_path, args.model_files_directory,
-        args.output_directory, strategies[args.mode])
+        args.output_directory, strategies[args.mode], args.tmp_prefix)
 
 if __name__ == '__main__':
     main()

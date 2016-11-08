@@ -27,15 +27,19 @@ RUN make
 WORKDIR /opt/libsvm-${LIBSVM_VER}/python
 RUN make
 
-ENV PATH $PATH:/opt/libsvm-${LIBSVM_VER}
+# Install libsvm and python bindings
+# These have no installer so we place the library and python bindings manually
+RUN cp /opt/libsvm-${LIBSVM_VER}/libsvm.so* /usr/lib/
+RUN ldconfig
+RUN cp /opt/libsvm-${LIBSVM_VER}/python/*.py /usr/local/lib/python2.7/dist-packages/
 
-### Step 2: Install Predict-TF-Binding from GitHub
+### Step 3: Install Predict-TF-Binding from GitHub
 WORKDIR /opt/
 RUN git clone https://github.com/Duke-GCB/Predict-TF-Binding.git predict-tf-binding
 RUN pip install -r /opt/predict-tf-binding/requirements.txt
 ENV PATH /opt/predict-tf-binding/:$PATH
 
-### Step 3: Install Predict-TF-Preference from GitHub
+### Step 4: Install Predict-TF-Preference from GitHub
 WORKDIR /opt/
 RUN git clone https://github.com/Duke-GCB/Predict-TF-Preference.git predict-tf-preference
 ENV PATH /opt/predict-tf-binding/:$PATH

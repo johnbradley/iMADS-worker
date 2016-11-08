@@ -7,7 +7,6 @@ PREDICTIONS_CONFIG_FILE = "PREDICTIONS_CONFIG_FILE"
 PREFERENCES_CONFIG_FILE = "PREFERENCES_CONFIG_FILE"
 WORKER_USERNAME = "WORKER_USERNAME"
 WORKER_PASSWORD = "WORKER_PASSWORD"
-TMP_PREFIX = "TMP_PREFIX"
 
 class Config(object):
 
@@ -22,7 +21,6 @@ class Config(object):
       preferences_config_file: Path to the tracks-preferences.yaml config file providing metadata for model files
       worker_username: str: username required for worker specific prediction API endpoints
       worker_password: str: password required for worker specific prediction API endpoints
-      tmp_prefix: str: prefix to use for CWL tmpdir-prefix and tmp-outdir-prefix
       """
 
       self.base_url = os.environ.get(BASE_URL)
@@ -32,4 +30,3 @@ class Config(object):
       self.preferences_config_file = os.environ.get(PREFERENCES_CONFIG_FILE)
       self.worker_username = os.environ.get(WORKER_USERNAME)
       self.worker_password = os.environ.get(WORKER_PASSWORD)
-      self.tmp_prefix = os.environ.get(TMP_PREFIX)

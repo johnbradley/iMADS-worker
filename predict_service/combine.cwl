@@ -1,7 +1,7 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: ['combine_predictions_sql.py']
-requirements:
+hints:
   DockerRequirement:
     dockerPull: dukegcb/predict-tf-binding
 inputs:

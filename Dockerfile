@@ -42,7 +42,7 @@ ENV PATH /opt/predict-tf-binding/:$PATH
 ### Step 4: Install Predict-TF-Preference from GitHub
 WORKDIR /opt/
 RUN git clone https://github.com/Duke-GCB/Predict-TF-Preference.git predict-tf-preference
-ENV PATH /opt/predict-tf-binding/:$PATH
+ENV PATH /opt/predict-tf-preference/:$PATH
 
 # Switch to non-root user
 RUN useradd -m worker

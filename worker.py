@@ -25,6 +25,5 @@ class PredictionsWorker(object):
                                   config_file,
                                   self.config.model_files_dir,
                                   self.config.output_dir,
-                                  strategy,
-                                  self.config.tmp_prefix)
+                                  strategy)
         return self.extract_predictions(runner.run())

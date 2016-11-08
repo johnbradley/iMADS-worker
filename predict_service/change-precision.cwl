@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 baseCommand: ['change_precision.py','--spaces']
-requirements:
+hints:
   DockerRequirement:
     dockerPull: dukegcb/predict-tf-binding
 class: CommandLineTool

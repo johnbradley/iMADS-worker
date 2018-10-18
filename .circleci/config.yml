@@ -20,3 +20,4 @@ jobs:
           command: |
             source venv/bin/activate
             nosetests
+
